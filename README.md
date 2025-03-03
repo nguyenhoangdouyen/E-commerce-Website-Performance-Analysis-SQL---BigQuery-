@@ -27,3 +27,18 @@ ORDER BY month;
 ```
 ### Queries result ###
 ![Image](https://github.com/user-attachments/assets/42eea66b-3f63-46af-9a9f-87d4033262a0)
+
+***Query 02: Calculate bounce rate traffic source in July 2017).***
+### Queries ###
+```sql
+SELECT 
+  trafficSource.source AS source,
+  SUM(totals.visits) AS total_visit,
+  SUM(totals.bounces) AS total_no_of_bounce,
+  ROUND((SUM(totals.bounces) / SUM(totals.visits)) * 100, 3) AS bounce_rate
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`
+GROUP BY source
+ORDER BY total_visit DESC;
+```
+### Queries result ###
+![Image](https://github.com/user-attachments/assets/9b79b7a7-cf64-4fc2-a7ca-07f0c82f6df0)
