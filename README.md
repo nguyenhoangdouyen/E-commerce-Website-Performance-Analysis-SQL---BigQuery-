@@ -41,4 +41,4 @@ GROUP BY source
 ORDER BY total_visit DESC;
 ```
 ### Queries result ###
-![Image](https://github.com/user-attachments/assets/9b79b7a7-cf64-4fc2-a7ca-07f0c82f6df0)
+![Image](https://github.com/user-attachments/assets/c900d79e-9073-4ee4-a3f0-0c8f372a3084)
