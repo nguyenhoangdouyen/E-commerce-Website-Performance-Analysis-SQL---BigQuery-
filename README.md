@@ -12,7 +12,7 @@ The eCommerce dataset is publicly available in Google BigQuery. Follow these ste
 4. In the search bar, enter the project ID: `bigquery-public-data.google_analytics_sample.ga_sessions` and press **Enter**.
 5. Click on the `ga_sessions_` table to explore its structure and data.
 ## **IV. Exploring the Dataset** ##
-Query 01: Calculate total visit, pageview, transaction and revenue for January, February and March 2017 (order by month).
+***Query 01: Calculate total visit, pageview, transaction and revenue for January, February and March 2017 (order by month).***
 ### Queries ###
 ```sql
 SELECT 
