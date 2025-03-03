@@ -42,3 +42,40 @@ ORDER BY total_visit DESC;
 ```
 ### Queries result ###
 ![Image](https://github.com/user-attachments/assets/c900d79e-9073-4ee4-a3f0-0c8f372a3084)
+
+***Query 03: Revenue by traffic source by week, by month in June 2017***
+```sql
+WITH month_type AS (
+  SELECT 
+    FORMAT_DATE('%Y%m', PARSE_DATE('%Y%m%d', date)) AS time,
+    trafficSource.source AS source,
+    ROUND(SUM(products.productRevenue) / 1000000, 4) AS revenue,
+    'Month' AS time_type
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201706*`, 
+  UNNEST(hits) AS hits,
+  UNNEST(hits.product) AS products
+  WHERE products.productRevenue IS NOT NULL
+  GROUP BY source, time
+),
+week_type AS (
+  SELECT 
+    FORMAT_DATE('%Y%W', PARSE_DATE('%Y%m%d', date)) AS time,
+    trafficSource.source AS source,
+    ROUND(SUM(products.productRevenue) / 1000000, 4) AS revenue,
+    'Week' AS time_type
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201706*`, 
+  UNNEST(hits) AS hits,
+  UNNEST(hits.product) AS products
+  WHERE products.productRevenue IS NOT NULL
+  GROUP BY source, time
+)
+SELECT time_type, time, source, revenue
+FROM month_type
+UNION ALL
+SELECT time_type, time, source, revenue
+FROM week_type
+ORDER BY revenue DESC;
+```
+### Queries result ###
+
+![Image](https://github.com/user-attachments/assets/3ae1e18e-72f3-4b45-91e0-cee2ee42d762)
