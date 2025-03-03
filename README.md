@@ -41,9 +41,9 @@ GROUP BY source
 ORDER BY total_visit DESC;
 ```
 ### Queries result ###
-![Image](https://github.com/user-attachments/assets/c900d79e-9073-4ee4-a3f0-0c8f372a3084)
+![Image](https://github.com/user-attachments/assets/ca3271d7-aeb2-4857-afcf-df9ce4879727)
 
-***Query 03: Revenue by traffic source by week, by month in June 2017***
+***Query 03: Calculate revenue by traffic source by week, by month in June 2017***
 ```sql
 WITH month_type AS (
   SELECT 
@@ -79,3 +79,42 @@ ORDER BY revenue DESC;
 ### Queries result ###
 
 ![Image](https://github.com/user-attachments/assets/3ae1e18e-72f3-4b45-91e0-cee2ee42d762)
+
+***Query 04: Calculate average number of pageviews by purchaser type***
+```sql
+WITH 
+purchaser_data AS (
+  SELECT
+      FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) AS month,
+      SUM(totals.pageviews) / COUNT(DISTINCT fullvisitorid) AS avg_pageviews_purchase
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`,
+    UNNEST(hits) hits,
+    UNNEST(product) product
+  WHERE _table_suffix BETWEEN '0601' AND '0731'
+    AND totals.transactions >= 1
+    AND product.productRevenue IS NOT NULL
+  GROUP BY month
+),
+non_purchaser_data AS (
+  SELECT
+      FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) AS month,
+      SUM(totals.pageviews) / COUNT(DISTINCT fullvisitorid) AS avg_pageviews_non_purchase
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`,
+    UNNEST(hits) hits,
+    UNNEST(product) product
+  WHERE _table_suffix BETWEEN '0601' AND '0731'
+    AND totals.transactions IS NULL
+    AND product.productRevenue IS NULL
+  GROUP BY month
+)
+SELECT
+    pd.*,
+    avg_pageviews_non_purchase
+FROM purchaser_data pd
+FULL JOIN non_purchaser_data USING(month)
+ORDER BY pd.month;
+```
+### Queries result ###
+![Image](https://github.com/user-attachments/assets/fd384e5f-6e4d-4807-bf66-a35ba2b19a72)
+
+
