@@ -13,7 +13,7 @@ The eCommerce dataset is publicly available in Google BigQuery. Follow these ste
 5. Click on the `ga_sessions_` table to explore its structure and data.
 ## **IV. Exploring the Dataset** ##
 ***Query 01: Calculate total visit, pageview, transaction and revenue for January, February and March 2017 (order by month).***
-### Queries ###
+#### Queries ####
 ```sql
 SELECT 
   FORMAT_DATE('%Y%m', PARSE_DATE('%Y%m%d', date)) AS month,
@@ -25,11 +25,11 @@ WHERE _table_suffix BETWEEN '0101' AND '0331'
 GROUP BY month
 ORDER BY month;
 ```
-### Queries result ###
+#### Queries result ####
 ![Image](https://github.com/user-attachments/assets/42eea66b-3f63-46af-9a9f-87d4033262a0)
 
 ***Query 02: Calculate bounce rate traffic source in July 2017).***
-### Queries ###
+#### Queries ####
 ```sql
 SELECT 
   trafficSource.source AS source,
@@ -40,10 +40,11 @@ FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`
 GROUP BY source
 ORDER BY total_visit DESC;
 ```
-### Queries result ###
+#### Queries result ####
 ![Image](https://github.com/user-attachments/assets/ca3271d7-aeb2-4857-afcf-df9ce4879727)
 
 ***Query 03: Calculate revenue by traffic source by week, by month in June 2017***
+#### Queries ####
 ```sql
 WITH month_type AS (
   SELECT 
@@ -76,9 +77,47 @@ SELECT time_type, time, source, revenue
 FROM week_type
 ORDER BY revenue DESC;
 ```
-### Queries result ###
+#### Queries result ####
 
 ![Image](https://github.com/user-attachments/assets/3ae1e18e-72f3-4b45-91e0-cee2ee42d762)
+
+***Query 04: Calculate average number of pageviews by purchaser type***
+#### Queries ####
+```sql
+WITH 
+purchaser_data AS (
+  SELECT
+      FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) AS month,
+      SUM(totals.pageviews) / COUNT(DISTINCT fullvisitorid) AS avg_pageviews_purchase
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`,
+    UNNEST(hits) hits,
+    UNNEST(product) product
+  WHERE _table_suffix BETWEEN '0601' AND '0731'
+    AND totals.transactions >= 1
+    AND product.productRevenue IS NOT NULL
+  GROUP BY month
+),
+non_purchaser_data AS (
+  SELECT
+      FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) AS month,
+      SUM(totals.pageviews) / COUNT(DISTINCT fullvisitorid) AS avg_pageviews_non_purchase
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`,
+    UNNEST(hits) hits,
+    UNNEST(product) product
+  WHERE _table_suffix BETWEEN '0601' AND '0731'
+    AND totals.transactions IS NULL
+    AND product.productRevenue IS NULL
+  GROUP BY month
+)
+SELECT
+    pd.*,
+    avg_pageviews_non_purchase
+FROM purchaser_data pd
+FULL JOIN non_purchaser_data USING(month)
+ORDER BY pd.month;
+```
+#### Queries result ####
+![Image](https://github.com/user-attachments/assets/fd384e5f-6e4d-4807-bf66-a35ba2b19a72)
 
 ***Query 04: Calculate average number of pageviews by purchaser type***
 ```sql
@@ -114,7 +153,5 @@ FROM purchaser_data pd
 FULL JOIN non_purchaser_data USING(month)
 ORDER BY pd.month;
 ```
-### Queries result ###
+#### Queries result ####
 ![Image](https://github.com/user-attachments/assets/fd384e5f-6e4d-4807-bf66-a35ba2b19a72)
-
-
