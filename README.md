@@ -119,39 +119,91 @@ ORDER BY pd.month;
 #### Queries result ####
 ![Image](https://github.com/user-attachments/assets/fd384e5f-6e4d-4807-bf66-a35ba2b19a72)
 
-***Query 04: Calculate average number of pageviews by purchaser type***
+***Query 05: Calculate average number of transactions per user that made a purchase in July 2017***
+#### Queries ####
+
 ```sql
-WITH 
-purchaser_data AS (
-  SELECT
-      FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) AS month,
-      SUM(totals.pageviews) / COUNT(DISTINCT fullvisitorid) AS avg_pageviews_purchase
-  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`,
-    UNNEST(hits) hits,
-    UNNEST(product) product
-  WHERE _table_suffix BETWEEN '0601' AND '0731'
-    AND totals.transactions >= 1
-    AND product.productRevenue IS NOT NULL
-  GROUP BY month
-),
-non_purchaser_data AS (
-  SELECT
-      FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) AS month,
-      SUM(totals.pageviews) / COUNT(DISTINCT fullvisitorid) AS avg_pageviews_non_purchase
-  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`,
-    UNNEST(hits) hits,
-    UNNEST(product) product
-  WHERE _table_suffix BETWEEN '0601' AND '0731'
-    AND totals.transactions IS NULL
-    AND product.productRevenue IS NULL
-  GROUP BY month
-)
 SELECT
-    pd.*,
-    avg_pageviews_non_purchase
-FROM purchaser_data pd
-FULL JOIN non_purchaser_data USING(month)
-ORDER BY pd.month;
+    FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) AS month,
+    SUM(totals.transactions) / COUNT(DISTINCT fullvisitorid) AS Avg_total_transactions_per_user
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`,
+    UNNEST(hits) hits,
+    UNNEST(product) product
+WHERE totals.transactions >= 1
+AND product.productRevenue IS NOT NULL
+GROUP BY month;
+```
+#### Queries resul ####
+![Image](https://github.com/user-attachments/assets/6c85fb89-5f02-472d-b652-3400b1447279)
+
+***Query 06: Calculate average amount of money spent per session. Only include purchaser data in July 2017***
+#### Queries ####
+```sql
+SELECT
+    FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) AS month,
+    ((SUM(product.productRevenue)/SUM(totals.visits))/POWER(10,6)) AS avg_revenue_by_user_per_visit
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`,
+    UNNEST(hits) hits,
+    UNNEST(product) product
+WHERE product.productRevenue IS NOT NULL
+AND totals.transactions >= 1
+GROUP BY month;
 ```
 #### Queries result ####
-![Image](https://github.com/user-attachments/assets/fd384e5f-6e4d-4807-bf66-a35ba2b19a72)
+
+![Image](https://github.com/user-attachments/assets/4ed51427-3666-4b31-8119-a9c2baa565b2)
+
+***Query 07: Other products purchased by customers who purchased product "YouTube Men's Vintage Henley" in July 2017. Output should show product name and the quantity was ordered.***
+#### Queries ####
+```sql
+WITH Purchasers AS (
+  SELECT DISTINCT fullVisitorId
+  FROM `bigquery-public-data.google_analytics_sample.*`, UNNEST(hits) AS hits, UNNEST(hits.product) AS product
+  WHERE product.v2ProductName = "YouTube Men's Vintage Henley"
+)
+SELECT
+  product.v2ProductName AS product_name,
+  COUNT(*) AS purchase_count
+FROM `bigquery-public-data.google_analytics_sample.*`, UNNEST(hits) AS hits, UNNEST(hits.product) AS product
+WHERE fullVisitorId IN (SELECT fullVisitorId FROM Purchasers)
+AND product.v2ProductName <> "YouTube Men's Vintage Henley"
+GROUP BY product_name
+ORDER BY purchase_count DESC;
+```
+#### Queries result ####
+![Image](https://github.com/user-attachments/assets/4caaaa73-dcc7-4b2f-9882-44562bfa6848)
+
+***Query 08: Calculate cohort map from product view to addtocart to purchase in Jan, Feb and March 2017.***
+#### Queries ####
+```sql
+WITH product_data AS (
+    SELECT
+        FORMAT_DATE('%Y%m', PARSE_DATE('%Y%m%d', date)) AS month,
+        COUNT(CASE WHEN eCommerceAction.action_type = '2' THEN product.v2ProductName END) AS num_product_view,
+        COUNT(CASE WHEN eCommerceAction.action_type = '3' THEN product.v2ProductName END) AS num_add_to_cart,
+        COUNT(CASE WHEN eCommerceAction.action_type = '6' AND product.productRevenue IS NOT NULL THEN product.v2ProductName END) AS num_purchase
+    FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`,
+         UNNEST(hits) AS hits,
+         UNNEST(hits.product) AS product
+    WHERE _TABLE_SUFFIX BETWEEN '20170101' AND '20170331'
+          AND eCommerceAction.action_type IN ('2', '3', '6')
+    GROUP BY month
+    ORDER BY month
+)
+
+SELECT
+    *,
+    ROUND(num_add_to_cart / num_product_view * 100, 2) AS add_to_cart_rate,
+    ROUND(num_purchase / num_product_view * 100, 2) AS purchase_rate
+FROM product_data;
+```
+#### Queries result ####
+![Image](https://github.com/user-attachments/assets/9075c9e7-cd9b-4750-a4e7-5df7ba227bd5)
+
+## **V. How to Run the Queries** ##
+1. Open Google BigQuery.
+2. Load the dataset bigquery-public-data.google_analytics_sample.
+3. Execute each query individually.
+
+## **VI. How to Run the Queries** ##
+This project highlights the application of SQL to analyze web traffic data in Google BigQuery. By writing queries, I explored key metrics such as visits, pageviews, bounce rates, transactions, and revenue per traffic source. These insights help understand user engagement and conversion trends. While SQL provides valuable data extraction and transformation capabilities, further visualization using tools like Power BI or Tableau would enhance the interpretation of these findings.
