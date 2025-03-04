@@ -133,7 +133,7 @@ WHERE totals.transactions >= 1
 AND product.productRevenue IS NOT NULL
 GROUP BY month;
 ```
-#### Queries resul ####
+#### Queries result ####
 ![Image](https://github.com/user-attachments/assets/6c85fb89-5f02-472d-b652-3400b1447279)
 
 ***Query 06: Calculate average amount of money spent per session. Only include purchaser data in July 2017***
