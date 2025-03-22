@@ -186,7 +186,7 @@ GROUP BY month;
 #### 💡 Queries result ####
 ![Image](https://github.com/user-attachments/assets/6c85fb89-5f02-472d-b652-3400b1447279)
 
-###🔍 Calculate average amount of money spent per session. Only include purchaser data in July 2017
+### 🔍 Calculate average amount of money spent per session. Only include purchaser data in July 2017
 
 Determine the **average amount of money spent per session** by **purchasers in July 2017**, focusing on those who made a purchase. This analysis will offer insights into customer spending patterns, helping to evaluate marketing strategy effectiveness and identify high-value customer segments.
 
@@ -259,10 +259,4 @@ FROM product_data;
 #### 💡 Queries result ####
 ![Image](https://github.com/user-attachments/assets/9075c9e7-cd9b-4750-a4e7-5df7ba227bd5)
 
-## **🎯 V. How to Run the Queries** ##
-1. Open Google BigQuery.
-2. Load the dataset bigquery-public-data.google_analytics_sample.
-3. Execute each query individually.
 
-## **🎯 VI. How to Run the Queries** ##
-This project highlights the application of SQL to analyze web traffic data in Google BigQuery. By writing queries, I explored key metrics such as visits, pageviews, bounce rates, transactions, and revenue per traffic source. These insights help understand user engagement and conversion trends. While SQL provides valuable data extraction and transformation capabilities, further visualization using tools like Power BI or Tableau would enhance the interpretation of these findings.
