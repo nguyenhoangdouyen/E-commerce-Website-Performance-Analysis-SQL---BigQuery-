@@ -1,4 +1,4 @@
-# 💻 E-commerce Website Performance Analysis (SQL - BigQuery) 
+# 💻 Ecommerce Web Performance & Purchase Behavior Analysis | SQL, BigQuery  
 
 ![image](https://github.com/user-attachments/assets/4a8401e3-ac9f-44db-aa80-60f83015406a)
 
