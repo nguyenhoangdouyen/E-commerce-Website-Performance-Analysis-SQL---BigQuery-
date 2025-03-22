@@ -3,16 +3,18 @@
 ![image](https://github.com/user-attachments/assets/4a8401e3-ac9f-44db-aa80-60f83015406a)
 
 **Author:** Nguyen Hoang Do Uyen
+
 **Date:** 07/10/2001 
+
 **Tools Used:** SQL
 
 ## 📑 Table of Contents
 
-📌 Background & Overview
+[📌 Background & Overview](#background--overview)
 
-📂 Dataset Description & Data Structure
+[📂 Dataset Description & Data Structure](#dataset-description--data-structure)
 
-🔎 Final Conclusion & Recommendations
+[🔎 Final Conclusion & Recommendations](#final-conclusion--recommendations)
 
 ## Background & Overview
 
@@ -261,14 +263,14 @@ FROM product_data;
 
 ## 🔎 Final Conclusion & Recommendations
 
-### **Findings & Insights**
+### 📌 **Findings & Insights**
 
 - **Traffic Trends**: The **total visits** in January, February, and March 2017 showed consistent traffic, with March having the highest number of visits (69,931).
 - **Revenue by Source**: **Direct** traffic contributed significantly to revenue in June 2017, with notable contributions from **Google** and **Mail** sources, indicating strong performance from these channels.
 - **Bounce Rate Insights**: Traffic from sources like **phandroid.com** has a high bounce rate of **77.78%**, which suggests that users might not be engaging well with the content on landing pages.
 - **Purchaser Behavior**: Customers who bought the **"YouTube Men's Vintage Henley"** showed interest in related products like **Google Men's Vintage Badge Tee Black**, which presents an opportunity for cross-selling.
 
-### **Recommendations (RCM)**
+### 📌 **Recommendations **
 
 1. **Optimize Landing Pages for High Bounce Traffic**: Improve pages for sources with high bounce rates (e.g., **phandroid.com**) by enhancing content relevance and reducing page load times.
 2. **Focus on Direct & Paid Traffic**: Increase investment in **Google Ads** and improve brand awareness to leverage high-performing **direct traffic** for better conversions.
