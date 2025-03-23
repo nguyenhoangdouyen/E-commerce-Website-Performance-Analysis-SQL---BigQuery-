@@ -32,7 +32,7 @@ This project uses **SQL** and **BigQuery** to analyze the performance of an e-co
 
 ## 📂 Dataset Description & Data Structure
 
-** 📌 Data Source**: The sample data is from **Google Analytics 4 (GA4)**, exported to **BigQuery**, including user activity data from the **Google Merchandise Store** e-commerce website.
+**📌 Data Source**: The sample data is from **Google Analytics 4 (GA4)**, exported to **BigQuery**, including user activity data from the **Google Merchandise Store** e-commerce website.
 
 **📌 Data Size**:
 
